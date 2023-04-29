@@ -1,0 +1,23 @@
+#!groovy
+pipeline{
+    environment {
+        registry = "suresh/jenkins-test"
+        credentialRegistry = "docker-credentials"
+    }
+    agent any
+    stages {
+        stage("clone a git repository") {
+            steps {
+                git credentialsId: 'git-credentials', url: 'https://github.com/sureshsidd/Test-jenkins.git'
+            }    
+        }
+        stage("build a docker image") {
+            steps {
+                sh "echo build a docker image"
+                script {
+                    image = docker.build("${registry}:$BUILD_NUMBER")
+                }
+            }
+        }
+    }
+}
